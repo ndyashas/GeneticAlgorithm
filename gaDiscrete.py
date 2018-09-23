@@ -3,7 +3,7 @@
 # all at the same time by considering the top agents at that
 # given point.
 
-import gaUtils.gaDeamon as deamon
+import ga2.gaUtils.gaDeamon as deamon
 
 class Session:
     """
@@ -111,7 +111,3 @@ class Session:
         DESCRIPTION : Closes and deletes the current session
         """
         pass
-
-a = Session()
-a.initialize()
-print(a.sessID)

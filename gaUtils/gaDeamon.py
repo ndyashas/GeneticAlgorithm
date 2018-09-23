@@ -8,10 +8,9 @@ import time
 import random
 import pickle
 
-sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+import ga2.gaUtils.AgentClass as AgentClass
 GA_UTIL = os.path.dirname(os.path.realpath(__file__))
 
-import AgentClass
 
 def getNewSessionID():
     """
