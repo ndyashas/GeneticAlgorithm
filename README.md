@@ -28,10 +28,10 @@ The following list contains only gaDiscrete class' functions that are done , and
 	- [x] getAgent
 	- [x] getAllAgents
 	- [x] updateAgent
-	- [ ] getBestAgent
-	- [ ] getAverageFitness
+	- [x] getBestAgent
+	- [x] getAverageFitness
 	- [ ] createNextGen
-	- [ ] resetEnv
+	- [x] resetEnv
 	- [x] delete
 
 Open to ideas , and contributions ! 
