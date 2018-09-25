@@ -225,7 +225,7 @@ def getAgent(sessID, agentID):
     
     except Exception:
         print("Error couldnt retrieve error in getAgent()")
-        dnaObj = None
+        agentObj = None
     
     return(agentObj)
 
