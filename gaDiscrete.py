@@ -3,6 +3,8 @@
 # all at the same time by considering the top agents at that
 # given point.
 
+import os
+import shutil
 import ga2.gaUtils.gaDeamon as deamon
 
 class Session:
@@ -36,6 +38,7 @@ class Session:
         for i in range(self.agentCount):
             a = deamon.createAgent(self.sessID)
 
+            
     def getAllAgents(self):
         """
         INPUT       : None
@@ -44,26 +47,34 @@ class Session:
 
         DESCRIPTION : Self explanatory from OUTPUT
         """
-        pass
+        try:
+            toRet = deamon.getCurrGen(self.sessID)
+        except Exception:
+            print("Error while retrieving current agents")
+            toRet = set()
 
-    def getAgent(self):
+        return(toRet)
+
+    def getAgent(self, agentID):
         """
         INPUT       : AgentID
         OUTPUT      : Returns the agent with the given AgentId
 
         DESCRIPTION : Self explanatory from OUTPUT
         """
-        pass
 
-    def updateAgent(self):
+        agentObj = deamon.getAgent(self.sessID, agentID)
+        return(agentObj)
+        
+    def updateAgent(self, agentObj):
         """
         INPUT       : Agent object
         OUTPUT      : Returns 1 on success, 0 on failure
 
         DESCRIPTION : Updates the status of Agent in the cluster.
         """
-        pass
-
+        return(deamon.storeAgent(agentObj))
+    
     def getBestAgent(self):
         """
         INPUT       : None
@@ -110,4 +121,12 @@ class Session:
 
         DESCRIPTION : Closes and deletes the current session
         """
-        pass
+
+        try:
+
+            sessDir = deamon.GA_UTIL_DIR + "/utilFiles/tmp" + str(self.sessID)
+            shutil.rmtree(sessDir)
+            del self
+            
+        except Exception:
+            print("Error deleting session")
