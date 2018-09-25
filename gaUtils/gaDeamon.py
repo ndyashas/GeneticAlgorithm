@@ -9,7 +9,22 @@ import random
 import pickle
 
 import ga2.gaUtils.AgentClass as AgentClass
-GA_UTIL = os.path.dirname(os.path.realpath(__file__))
+GA_UTIL_DIR = os.path.dirname(os.path.realpath(__file__))
+
+
+# current functions included are as follows:
+# 
+# 1 ) ** getNewSessionID()
+# 2 ) isLocked()
+# 3 ) lock()
+# 4 ) unlock()
+# 5 ) * getCurrGen()
+# 6 ) setCuttGen()
+# 7 ) storeAgent()
+# 8 ) generateAgentID()
+# 9 ) ** createAgent()
+# 10) ** deleteAgent()
+# 11) getAgent()
 
 
 def getNewSessionID():
@@ -24,7 +39,7 @@ def getNewSessionID():
     lock()
     try:
         
-        sessFp = open(GA_UTIL+"/utilFiles/SESSIONNEXT.smtf", "r")
+        sessFp = open(GA_UTIL_DIR+"/utilFiles/SESSIONNEXT.smtf", "r")
         sessID = int(sessFp.readline())
         sessFp.close()
 
@@ -33,7 +48,7 @@ def getNewSessionID():
         sessID = 0
     
     try:
-        sessFp = open(GA_UTIL+"/utilFiles/SESSIONNEXT.smtf", "w")
+        sessFp = open(GA_UTIL_DIR+"/utilFiles/SESSIONNEXT.smtf", "w")
         sessFp.write(str(sessID+1))
         sessFp.close()
 
@@ -61,7 +76,7 @@ def isLocked(sessID=None):
         smtf = "SESSIONLOCK.smtf" 
     
     try:
-        lckfp = open(GA_UTIL+"/utilFiles/"+smtf, "r")
+        lckfp = open(GA_UTIL_DIR+"/utilFiles/"+smtf, "r")
         lckpos = int(lckfp.readline())
         lckfp.close()
 
@@ -89,16 +104,16 @@ def lock(sessID=None):
         smtf = "SESSIONLOCK.smtf" 
         
     try:
-        lckfp = open(GA_UTIL+"/utilFiles/"+smtf, "w")
+        lckfp = open(GA_UTIL_DIR+"/utilFiles/"+smtf, "w")
         lckfp.close()
     
     except Exception:
-        os.mkdir(GA_UTIL+"/utilFiles/"+"tmp"+str(sessID))
-        os.mkdir(GA_UTIL+"/utilFiles/"+"tmp"+str(sessID)+"/smtf")
-        os.mkdir(GA_UTIL+"/utilFiles/"+"tmp"+str(sessID)+"/dnaPool")
+        os.mkdir(GA_UTIL_DIR+"/utilFiles/"+"tmp"+str(sessID))
+        os.mkdir(GA_UTIL_DIR+"/utilFiles/"+"tmp"+str(sessID)+"/smtf")
+        os.mkdir(GA_UTIL_DIR+"/utilFiles/"+"tmp"+str(sessID)+"/dnaPool")
         
     lckval = 1
-    lckfp = open(GA_UTIL+"/utilFiles/"+smtf, "w")
+    lckfp = open(GA_UTIL_DIR+"/utilFiles/"+smtf, "w")
     lckfp.write(str(lckval))
     lckfp.close()
     return(lckval)
@@ -119,7 +134,7 @@ def unlock(sessID=None):
         smtf = "SESSIONLOCK.smtf"
 
     try:
-        lckfp = open(GA_UTIL+"/utilFiles/"+smtf, "w")
+        lckfp = open(GA_UTIL_DIR+"/utilFiles/"+smtf, "w")
         lckfp.write(str(0))
         lckfp.close()
         
@@ -139,7 +154,7 @@ def getCurrGen(sessID):
                   object in that particular session's directory
     """
     try:
-        cgfp = open(GA_UTIL+"/utilFiles/tmp"+str(sessID)+"/smtf/VALID.smtf", "rb")
+        cgfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(sessID)+"/smtf/VALID.smtf", "rb")
         currImg = pickle.load(cgfp)
         cgfp.close()
     except Exception:
@@ -158,7 +173,7 @@ def setCurrGen(sessID, agentList):
                   object in that particular session's directory
     """
     try:
-        cgfp = open(GA_UTIL+"/utilFiles/tmp"+str(sessID)+"/smtf/VALID.smtf", "wb")
+        cgfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(sessID)+"/smtf/VALID.smtf", "wb")
         pickle.dump(agentList, cgfp)
         cgfp.close()
     except Exception:
@@ -177,9 +192,9 @@ def storeAgent(agentObj):
     """
     
     currAgents = getCurrGen(agentObj.sessID)
-
+    lock(agentObj.sessID)
     try:
-        tpfp = open(GA_UTIL+"/utilFiles/tmp"+str(agentObj.sessID)+"/dnaPool/dna"
+        tpfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(agentObj.sessID)+"/dnaPool/dna"
                     +str(agentObj.agentID)+".dna", "wb")
         pickle.dump(agentObj, tpfp)
         tpfp.close()
@@ -189,7 +204,30 @@ def storeAgent(agentObj):
         return(0)
     
     setCurrGen(agentObj.sessID, currAgents)
+    unlock(agentObj.sessID)
     return(agentObj.agentID)
+
+
+def getAgent(sessID, agentID):
+    """
+    INPUT       : None
+    OUTPUT      : Agent object
+
+    DESCRIPTION : Creates and stores the newly created AgentDna
+                  object in that particular session's directory
+    """
+
+    try:
+        tpfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(sessID)+"/dnaPool/dna"
+                    +str(agentID)+".dna", "rb")
+        agentObj = pickle.load(tpfp)
+        tpfp.close()
+    
+    except Exception:
+        print("Error couldnt retrieve error in getAgent()")
+        dnaObj = None
+    
+    return(agentObj)
 
 
 def generateAgentID(sessID):
@@ -201,15 +239,14 @@ def generateAgentID(sessID):
                   object in that particular session's directory
     """
     try:
-        nextfp = open(GA_UTIL+"/utilFiles/tmp"+str(sessID)+"/smtf/NEXTID.smtf", "r")
+        nextfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(sessID)+"/smtf/NEXTID.smtf", "r")
         Idp = int(nextfp.readline())
         nextfp.close()
     except Exception:
-        #print("error in generate Agent ID, couldnt read")
         Idp = 0
 
     try:
-        nextfp = open(GA_UTIL+"/utilFiles/tmp"+str(sessID)+"/smtf/NEXTID.smtf", "w")
+        nextfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(sessID)+"/smtf/NEXTID.smtf", "w")
         nextfp.write(str(Idp+1))
         nextfp.close()
         return(Idp)
@@ -217,7 +254,6 @@ def generateAgentID(sessID):
     except Exception:
         print("error in generate agent ID, couldnt write")
         return(-1)
-
 
 
 def createAgent(sessID):
@@ -228,7 +264,7 @@ def createAgent(sessID):
     DESCRIPTION : Creates and stores the newly created AgentDna
                   object in that particular session's directory
     """
-    lock(sessID)
+    
     agent = AgentClass.AgentDna()
     agent.sessID = sessID
     agent.agentID = generateAgentID(sessID)
@@ -236,7 +272,36 @@ def createAgent(sessID):
     agent.fitness = 0
 
     storeAgent(agent)
-    unlock(sessID)
+    
 
-if(__name__ == "__main__"):
-    pass
+def deleteAgent(sessID, agentID):
+    """
+    INPUT       : sessID, agentID
+    OUTPUT      : None
+
+    DESCRIPTION : Creates and stores the newly created AgentDna
+                  object in that particular session's directory
+    """
+    
+    lock(sessID)
+    try:
+        currGen = getCurrGen(sessID)
+        if(agentID in currGen):
+            toDelFile = GA_UTIL_DIR + ("/utilFiles/tmp" + str(sessID)
+                                   + "/dnaPool/dna" + str(agentID)
+                                   +".dna")
+            os.remove(toDelFile)
+            currGen.remove(agentID)
+            setCurrGen(sessID, currGen)
+            
+        else:
+            print("Trying to delete an agent not present in the session")
+
+    except Exception:
+        print("delete Agent encountered an error")
+        return(0)
+    
+    finally:
+        unlock(sessID)
+        
+    return(1)
