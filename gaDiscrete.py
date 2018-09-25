@@ -93,7 +93,21 @@ class Session:
 
         DESCRIPTION : Self explanatory from OUTPUT
         """
-        pass
+
+        #try:
+
+        bestAgent = None
+        currGen = deamon.getCurrGen(self.sessID)
+        for agentID in currGen:
+            agent = deamon.getAgent(self.sessID, agentID)
+            if((bestAgent is None) or (bestAgent.fitness < agent.fitness)):
+                bestAgent = agent
+        """
+        except Exception:
+            print("error getting best agent")
+            bestAgent = None
+        """
+        return(bestAgent)
 
     def getAverageFitness(self):
         """
@@ -103,8 +117,20 @@ class Session:
 
         DESCRIPTION : Self explanatory from OUTPUT
         """
-        pass
 
+        try:
+
+            totalFitness = 0
+            currGen = deamon.getCurrGen(self.sessID)
+            for agentID in currGen:
+                totalFitness += deamon.getAgent(self.sessID, agentID).fitness
+
+        except Exception:
+            print("error getting average fitness")
+            totalFitness = 0
+
+        return(totalFitness/self.agentCount)
+                
     def createNextGen(self):
         """
         INPUT       : None
