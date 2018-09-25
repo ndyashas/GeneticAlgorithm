@@ -322,7 +322,6 @@ def createAgent(sessID):
     agent.sessID = sessID
     agent.agentID = generateAgentID(sessID)
     agent.dna = None
-    agent.fitness = 0
 
     storeAgent(agent)
     

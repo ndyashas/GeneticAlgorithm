@@ -1,6 +1,6 @@
 # This is the DnaClass / AgentClass file all agents
 # are objects of this class
-
+import random
 
 class AgentDna:
     """
@@ -15,6 +15,6 @@ class AgentDna:
         self.agentID = None
         self.sessID = None
         self.dna = None
-        self.fitness = None
+        self.fitness = random.randint(0, 10)
     
     

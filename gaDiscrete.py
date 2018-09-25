@@ -5,6 +5,7 @@
 
 import os
 import shutil
+import random
 import ga2.gaUtils.gaDeamon as deamon
 
 class Session:
@@ -139,8 +140,37 @@ class Session:
         DESCRIPTION : Creates the next generation based on the session
                       conf that is set in the beginning of the session
         """
-        pass
 
+        numberOfSurvivors = int((random.randint(1, 5)/100) * self.agentCount)
+
+        print("numberOfSurvivors = {}".format(numberOfSurvivors))
+        listOfAgents = [(agent.agentID, agent.fitness) for agent in
+                        [deamon.getAgent(self.sessID, agentID) for agentID in
+                         deamon.getCurrGen(self.sessID)]]
+
+        listOfAgents.sort(key=lambda x: x[1], reverse=False)
+        
+        unselected = listOfAgents[numberOfSurvivors:]
+        #print("Number of agents unselected = {}".format(len(unselected)))
+        wildCard = random.sample(unselected, int(len(unselected)*0.01))
+        #print("Number of agents entered through wild card {}".format(len(wildCard)))
+        finalUnselected = [agent for agent in unselected if(agent not in wildCard)]
+
+        #print("Final survivors number is {}".format(len(wildCard) + numberOfSurvivors))
+        for agent in finalUnselected:
+            deamon.deleteAgent(self.sessID, agent[0])
+            
+        # Now we have all the survivors, we need to make a new genration
+        while(len(deamon.getCurrGen(self.sessID)) < self.agentCount):
+            '''
+            The code to genrate new children based on parent
+            Here, a random new child is generated, thus the 
+            overall fitness will lie somewhere between half of
+            the maximum possible
+            '''
+            deamon.createAgent(self.sessID)
+            
+            
     def resetEnv(self, saveSettings=True):
         """
         INPUT       : saveSettings = False
