@@ -25,14 +25,14 @@ A lot of work still needs to be done, which I hope will be done soon .
 The following list contains only gaDiscrete class' functions that are done , and those that need to be done.
 * gaDiscrete
 	- [x] initialize
-	- [ ] getAgent
-	- [ ] getAllAgents
-	- [ ] updateAgent
+	- [x] getAgent
+	- [x] getAllAgents
+	- [x] updateAgent
 	- [ ] getBestAgent
 	- [ ] getAverageFitness
 	- [ ] createNextGen
 	- [ ] resetEnv
-	- [ ] delete
+	- [x] delete
 
 Open to ideas , and contributions ! 
   
