@@ -15,16 +15,26 @@ class Session:
     parameters.
     """
 
-    def __init__(self,agentCount=100, numParam=10, fixParam=True,
+    def __init__(self,sessID=None, agentCount=100, numParam=10, fixParam=True,
                  spread=2, generateMode='A'):
 
-        self.sessID = deamon.getNewSessionID()
-        self.agentCount = agentCount
-        self.numParam = numParam
-        self.fixParam = fixParam
-        self.spread = spread
-        self.generateMode = generateMode
-        self.a = None
+        if(sessID is None):
+            self.sessID = deamon.getNewSessionID()
+            self.agentCount = agentCount
+            self.numParam = numParam
+            self.fixParam = fixParam
+            self.spread = spread
+            self.generateMode = generateMode
+            deamon.setSession(self)
+            
+        else:
+            tmpObj = deamon.getSession(sessID)
+            self.sessID = tmpObj.sessID
+            self.agentCount = tmpObj.agentCount
+            self.numParam = tmpObj.numParam
+            self.fixParam = tmpObj.fixParam
+            self.spread = tmpObj.spread
+            self.generateMode = tmpObj.generateMode
         
     def initialize(self):
         """
@@ -105,14 +115,29 @@ class Session:
         """
         pass
 
-    def resetEnv(self, saveSettings=False):
+    def resetEnv(self, saveSettings=True):
         """
         INPUT       : saveSettings = False
         OUTPUT      : Returns 1 on success, 0 on failure
 
         DESCRIPTION : Deletes all the agents in the current session
         """
-        pass
+        try:
+            
+            sessDir = deamon.GA_UTIL_DIR + "/utilFiles/tmp" + str(self.sessID)
+            shutil.rmtree(sessDir+"/smtf")
+            shutil.rmtree(sessDir+"/dnaPool")
+            os.mkdir(sessDir+"/smtf")
+            os.mkdir(sessDir+"/dnaPool")
+            fp = open(sessDir+"/smtf/LOCK.smtf", "w")
+            fp.write(str(0))
+            fp.close()
+            deamon.setSession(self)
+            
+        except Exception:
+            print("Error resetting session")
+            return(0)
+        return(1)
 
     def delete(self):
         """
