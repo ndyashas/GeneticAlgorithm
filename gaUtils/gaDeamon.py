@@ -13,18 +13,71 @@ GA_UTIL_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
 # current functions included are as follows:
+#
+# ** uses lock
+# *
 # 
 # 1 ) ** getNewSessionID()
 # 2 ) isLocked()
 # 3 ) lock()
 # 4 ) unlock()
-# 5 ) * getCurrGen()
+# 5 ) getCurrGen()
 # 6 ) setCuttGen()
-# 7 ) storeAgent()
+# 7 ) ** storeAgent()
 # 8 ) generateAgentID()
-# 9 ) ** createAgent()
+# 9 ) createAgent()
 # 10) ** deleteAgent()
 # 11) getAgent()
+# 12) ** setSession()
+# 13) getSession()
+
+
+def getSession(sessID):
+    """
+    INPUT       : sessID
+    OUTPUT      : Agent object
+
+    DESCRIPTION : Creates and stores the newly created AgentDna
+                  object in that particular session's directory
+    """
+    #try:
+    
+    cgfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(sessID)
+                +"/smtf/SESS.smtf", "rb")
+    currImg = pickle.load(cgfp)
+    cgfp.close()
+    '''
+    except Exception:
+        print("error in getting the session {}".format(sessID))
+        currImg = None
+    '''
+    print(currImg.agentCount)
+    return(currImg)
+
+
+def setSession(sessionObj):
+    """
+    INPUT       : sessionObj
+    OUTPUT      : 1 on success 0 on failure
+
+    DESCRIPTION : Creates and stores the newly created AgentDna
+                  object in that particular session's directory
+    """
+    print("vavava", sessionObj.agentCount)
+    lock(sessionObj.sessID)
+    #try:
+    tpfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(sessionObj.sessID)
+                +"/smtf/SESS.smtf", "wb")
+    pickle.dump(sessionObj, tpfp)
+    tpfp.close()
+    '''
+    except Exception:
+        print("error in store of session, couldnt wb")
+        return(0)
+    '''
+    unlock(sessionObj.sessID)
+    
+    return(1)
 
 
 def getNewSessionID():
