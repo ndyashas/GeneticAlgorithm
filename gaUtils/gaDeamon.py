@@ -30,7 +30,58 @@ GA_UTIL_DIR = os.path.dirname(os.path.realpath(__file__))
 # 11) getAgent()
 # 12) ** setSession()
 # 13) getSession()
+# 14) asexualRep()
+# 15) mutateAgentObj()
 
+
+def mutateAgentObj(agentObj, mutate=10):
+    """
+    INPUT       : sessID
+    OUTPUT      : Agent object
+
+    DESCRIPTION : Creates and stores the newly created AgentDna
+                  object in that particular session's directory
+    """
+
+    currDna = agentObj.dna
+
+    if((mutate/100) > random.random()):
+
+        if(0.5 > random.random()):
+            mutateVal = 5
+        else:
+            mutateVal = -5
+
+        currDna[random.randint(0, len(currDna)-1)] += mutateVal
+        
+    return(currDna)
+    
+
+def aSexualRep(agentObj):
+    """
+    INPUT       : agentObj
+    OUTPUT      : child agentObj
+
+    DESCRIPTION : Creates and stores the newly created AgentDna
+                  object in that particular session's directory
+    """
+
+    childDna = []
+
+    itr = 0
+    while(itr < len(agentObj.dna)):
+        if(0.9 < random.random()):
+            childDna.append(random.randint(0, 10**2))
+        else:
+            childDna.append(agentObj.dna[itr])
+        itr += 1
+            
+    childObj = createAgent(agentObj.sessID)
+    childObj.dna = childDna
+    childObj.fitness = agentObj.fitness
+    childObj.dna = mutateAgentObj(childObj)
+    return(childObj)
+        
 
 def getSession(sessID):
     """
@@ -321,10 +372,11 @@ def createAgent(sessID):
     agent = AgentClass.AgentDna()
     agent.sessID = sessID
     agent.agentID = generateAgentID(sessID)
-    agent.dna = None
-
-    storeAgent(agent)
+    agent.dna = AgentClass.generateDna()
+    agent.fitness = 0
     
+    storeAgent(agent)
+    return(agent)
 
 def deleteAgent(sessID, agentID):
     """
