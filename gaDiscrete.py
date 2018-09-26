@@ -141,14 +141,15 @@ class Session:
                       conf that is set in the beginning of the session
         """
 
-        numberOfSurvivors = int((random.randint(1, 5)/100) * self.agentCount)
+        numberOfSurvivors = int((random.randint(5, 10)/100) * self.agentCount)
 
+        print("Population = {}".format(self.agentCount))
         print("numberOfSurvivors = {}".format(numberOfSurvivors))
         listOfAgents = [(agent.agentID, agent.fitness) for agent in
                         [deamon.getAgent(self.sessID, agentID) for agentID in
                          deamon.getCurrGen(self.sessID)]]
 
-        listOfAgents.sort(key=lambda x: x[1], reverse=False)
+        listOfAgents.sort(key=lambda x: x[1], reverse=True)
         
         unselected = listOfAgents[numberOfSurvivors:]
         #print("Number of agents unselected = {}".format(len(unselected)))
@@ -161,6 +162,8 @@ class Session:
             deamon.deleteAgent(self.sessID, agent[0])
             
         # Now we have all the survivors, we need to make a new genration
+        currPop = list(deamon.getCurrGen(self.sessID))
+        itr = 0
         while(len(deamon.getCurrGen(self.sessID)) < self.agentCount):
             '''
             The code to genrate new children based on parent
@@ -168,7 +171,8 @@ class Session:
             overall fitness will lie somewhere between half of
             the maximum possible
             '''
-            deamon.createAgent(self.sessID)
+            self.updateAgent(deamon.aSexualRep(self.getAgent(currPop[itr])))
+            itr = (itr + 1)%(len(currPop))
             
             
     def resetEnv(self, saveSettings=True):
