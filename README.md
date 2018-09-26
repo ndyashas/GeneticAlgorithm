@@ -24,7 +24,7 @@ this should print the session ID of that session
 A lot of work still needs to be done, which I hope will be done soon . 
 The following list contains only gaDiscrete class' functions that are done , and those that need to be done.
 * gaDiscrete
-	- [x] initialize
+	- [x] init
 	- [x] getAgent
 	- [x] getAllAgents
 	- [x] updateAgent

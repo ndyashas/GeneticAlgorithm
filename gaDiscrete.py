@@ -36,7 +36,7 @@ class Session:
             self.spread = tmpObj.spread
             self.generateMode = tmpObj.generateMode
         
-    def initialize(self):
+    def init(self):
         """
         INPUT       : None
         OUTPUT      : Returns 1 on success, 0 on failure
