@@ -33,7 +33,7 @@ The following list contains only gaDiscrete class' functions that are done , and
 	- [x] updateAgent
 	- [x] getBestAgent
 	- [x] getAverageFitness
-	- [ ] createNextGen
+	- [x] createNextGen
 	- [x] resetEnv
 	- [x] delete
 
