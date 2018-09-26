@@ -63,7 +63,7 @@ def setSession(sessionObj):
     DESCRIPTION : Creates and stores the newly created AgentDna
                   object in that particular session's directory
     """
-    print("vavava", sessionObj.agentCount)
+    
     lock(sessionObj.sessID)
     #try:
     tpfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(sessionObj.sessID)
