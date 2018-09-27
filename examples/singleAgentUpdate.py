@@ -1,5 +1,5 @@
 import random
-import ga2.gaDiscrete as gad
+import ga2.gaDisc as gad
 
 
 def diff(a , b):
@@ -16,13 +16,16 @@ def fitnessFun(agentObj):
     """
     Simple fitness function
 
-    This fitness function cheks for 
+    This fitness function checks for 
     how many of the dna's data are near to 0
     
+    Here we are trying to get the dna of the agent
+    as close as we can to the target vector
     """
     summ = 0
-    for i in agentObj.dna:
-        summ += diff(i, 0)
+    target = [50, 40, 37, 63, 72, 65, 81, 45, 12, 5]
+    for i in range(len(agentObj.dna)):
+        summ += diff(agentObj.dna[i], target[i])
     addToFitness = (200 - summ)
     return(agentObj.fitness + addToFitness)
 
@@ -30,7 +33,7 @@ def fitnessFun(agentObj):
 if(__name__ == "__main__"):
     # running this file as main
     
-    NUMBER_OF_EPOCH = 100
+    NUMBER_OF_EPOCH = 50
     NUMBER_OF_AGENTS = 100
 
     try:
@@ -61,9 +64,10 @@ if(__name__ == "__main__"):
         print("Average fitness is {}".format(sess.getAverageFitness()))
         print("maximum fitness is {}".format(sess.getBestAgent().fitness))
         print("Best DNA is {}".format(sess.getBestAgent().dna))
-        
+    
     except Exception as e:
         print("Exception cought with message as {}".format(e))
 
     finally:
         sess.delete()
+    

@@ -3,7 +3,7 @@
 # as for its reliability. 
 
 import random
-import ga2.gaDiscrete as gad
+import ga2.gaDisc as gad
 
 if(__name__ == "__main__"):
     # running this file as main
