@@ -13,7 +13,7 @@ git clone https://github.com/yashasbharadwaj111/GeneticAlgorithm ga2
 ```
 * import the Genetic Algorithm utility as 
 ```
-import ga2.gaDiscrete as gad
+import ga2.gaDisc as gad
 
 session1 = gad.Session()
 print(session1.sessID)
@@ -24,17 +24,8 @@ this should print the session ID of that session
 ga2 is designed to be flexible and also simple to use for a variety of use cases, check the [EXAMPLES.md](EXAMPLES.md) for examples. Documentation will be done as soon as a stable stage is reached
 
 ### Current Development
-A lot of work still needs to be done, which I hope will be done soon . 
-The following list contains only gaDiscrete class' functions that are done , and those that need to be done.
-* gaDiscrete
-	- [x] init
-	- [x] getAgent
-	- [x] getAllAgents
-	- [x] updateAgent
-	- [x] getBestAgent
-	- [x] getAverageFitness
-	- [x] createNextGen
-	- [x] resetEnv
-	- [x] delete
+gaDisc (Genetic Algorithm Discrete) is working and is in its first release stage, a lot of planning and designing needs to be done for gaCont (Genetic Algorithm continuous), which I hope will be soon !.
+*  - [x] gaDisc
+*  - [ ] gaCont
 
 Open to ideas , and contributions ! 
