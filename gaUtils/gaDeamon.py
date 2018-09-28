@@ -142,7 +142,8 @@ def getNewSessionID():
 
     lock()
     try:
-        
+        if(not os.path.isdir(GA_UTIL_DIR+"/utilFiles")):
+            os.mkdir(GA_UTIL_DIR+"/utilFiles")
         sessFp = open(GA_UTIL_DIR+"/utilFiles/SESSIONNEXT.smtf", "r")
         sessID = int(sessFp.readline())
         sessFp.close()
@@ -342,7 +343,7 @@ def generateAgentID(sessID):
     DESCRIPTION : Creates and stores the newly created AgentDna
                   object in that particular session's directory
     """
-    try:
+    try:    
         nextfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(sessID)+"/smtf/NEXTID.smtf", "r")
         Idp = int(nextfp.readline())
         nextfp.close()
