@@ -142,12 +142,11 @@ def getNewSessionID():
 
     lock()
     try:
-        if(not os.path.isdir(GA_UTIL_DIR+"/utilFiles")):
-            os.mkdir(GA_UTIL_DIR+"/utilFiles")
+        
         sessFp = open(GA_UTIL_DIR+"/utilFiles/SESSIONNEXT.smtf", "r")
         sessID = int(sessFp.readline())
         sessFp.close()
-
+    
     except Exception:
         print("Generating first session")
         sessID = 0
@@ -181,6 +180,8 @@ def isLocked(sessID=None):
         smtf = "SESSIONLOCK.smtf" 
     
     try:
+        if(not os.path.isdir(GA_UTIL_DIR+"/utilFiles")):
+            os.mkdir(GA_UTIL_DIR+"/utilFiles")
         lckfp = open(GA_UTIL_DIR+"/utilFiles/"+smtf, "r")
         lckpos = int(lckfp.readline())
         lckfp.close()
