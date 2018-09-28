@@ -1,5 +1,8 @@
 # Ignore all machine generated .pyc files
 *.pyc
+dist/
+build/
+ga2.egg-info/
 
 # Ignore all .dna files
 *.dna
