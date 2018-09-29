@@ -34,7 +34,7 @@ GA_UTIL_DIR = os.path.dirname(os.path.realpath(__file__))
 # 15) mutateAgentObj()
 
 
-def mutateAgentObj(agentObj, mutate=10):
+def mutateAgentObj(agentObj, sess):
     """
     INPUT       : sessID
     OUTPUT      : Agent object
@@ -44,14 +44,14 @@ def mutateAgentObj(agentObj, mutate=10):
     """
 
     currDna = agentObj.dna
-
-    if((mutate/100) > random.random()):
+    itr = 0
+    while((sess.mutation > random.random()) or (itr > int(len(currDna)/3))):
 
         if(0.5 > random.random()):
-            mutateVal = 5
+            mutateVal = (sess.mutation)*(10**(sess.spread))
         else:
-            mutateVal = -5
-
+            mutateVal = -1 * (sess.mutation)*(10**(sess.spread))
+            
         currDna[random.randint(0, len(currDna)-1)] += mutateVal
         
     return(currDna)
@@ -67,21 +67,19 @@ def aSexualRep(sess, agentObj):
     """
 
     childDna = []
-
+    
     itr = 0
     while(itr < len(agentObj.dna)):
-        if(0.9 < random.random()):
-            childDna.append(random.randint(0, 10**2))
+        if(sess.genecopy < random.random()):
+            childDna.append(random.randint(0, 10**(sess.spread)))
         else:
             childDna.append(agentObj.dna[itr])
         itr += 1
             
-    childObj = createAgent(sess,
-                           numParam=sess.numParam,
-                           spread=sess.spread)
+    childObj = createAgent(sess)
     childObj.dna = childDna
     childObj.fitness = agentObj.fitness
-    childObj.dna = mutateAgentObj(childObj)
+    childObj.dna = mutateAgentObj(childObj, sess)
     return(childObj)
         
 
@@ -366,7 +364,7 @@ def generateAgentID(sessID):
         return(-1)
 
 
-def createAgent(sess, numParam=10, spread=2):
+def createAgent(sess):
     """
     INPUT       : None
     OUTPUT      : Agent object
@@ -375,7 +373,7 @@ def createAgent(sess, numParam=10, spread=2):
                   object in that particular session's directory
     """
     
-    agent = AgentClass.AgentDna(numParam, spread)
+    agent = AgentClass.AgentDna(sess.numParam, sess.spread)
     agent.sessID = sess.sessID
     agent.agentID = generateAgentID(sess.sessID)
 
