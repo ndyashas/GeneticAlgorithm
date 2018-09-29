@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="ga2",
-    version="0.2.5",
+    version="0.2.7",
     author="Yashas ND",
     author_email="yashasbharadwaj111@gmail.com",
     description="A simple robust Genetic Algorithm utility",
