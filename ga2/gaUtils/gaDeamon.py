@@ -57,7 +57,7 @@ def mutateAgentObj(agentObj, mutate=10):
     return(currDna)
     
 
-def aSexualRep(agentObj):
+def aSexualRep(sess, agentObj):
     """
     INPUT       : agentObj
     OUTPUT      : child agentObj
@@ -76,7 +76,9 @@ def aSexualRep(agentObj):
             childDna.append(agentObj.dna[itr])
         itr += 1
             
-    childObj = createAgent(agentObj.sessID)
+    childObj = createAgent(sess,
+                           numParam=sess.numParam,
+                           spread=sess.spread)
     childObj.dna = childDna
     childObj.fitness = agentObj.fitness
     childObj.dna = mutateAgentObj(childObj)
@@ -91,17 +93,17 @@ def getSession(sessID):
     DESCRIPTION : Creates and stores the newly created AgentDna
                   object in that particular session's directory
     """
-    #try:
+    try:
     
-    cgfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(sessID)
-                +"/smtf/SESS.smtf", "rb")
-    currImg = pickle.load(cgfp)
-    cgfp.close()
-    '''
+        cgfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(sessID)
+                    +"/smtf/SESS.smtf", "rb")
+        currImg = pickle.load(cgfp)
+        cgfp.close()
+    
     except Exception:
         print("error in getting the session {}".format(sessID))
         currImg = None
-    '''
+        
     print(currImg.agentCount)
     return(currImg)
 
@@ -364,7 +366,7 @@ def generateAgentID(sessID):
         return(-1)
 
 
-def createAgent(sessID):
+def createAgent(sess, numParam=10, spread=2):
     """
     INPUT       : None
     OUTPUT      : Agent object
@@ -373,12 +375,10 @@ def createAgent(sessID):
                   object in that particular session's directory
     """
     
-    agent = AgentClass.AgentDna()
-    agent.sessID = sessID
-    agent.agentID = generateAgentID(sessID)
-    agent.dna = AgentClass.generateDna()
-    agent.fitness = 0
-    
+    agent = AgentClass.AgentDna(numParam, spread)
+    agent.sessID = sess.sessID
+    agent.agentID = generateAgentID(sess.sessID)
+
     storeAgent(agent)
     return(agent)
 

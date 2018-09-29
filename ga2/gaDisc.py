@@ -51,11 +51,13 @@ class Session:
         
         try:
             for i in range(self.agentCount):
-                agentObj = deamon.createAgent(self.sessID)
-                
+                agentObj = deamon.createAgent(self,
+                                              numParam=self.numParam,
+                                              spread=self.spread)
+        
         except Exception as e:
             print("gaDiscrete.init failed with error as : {}".format(e))
-            
+        
     def getAllAgents(self):
         """
         INPUT       : None
@@ -216,7 +218,7 @@ class Session:
             currPop = list(deamon.getCurrGen(self.sessID))
             itr = 0
             while(len(deamon.getCurrGen(self.sessID)) < self.agentCount):
-                self.updateAgent(deamon.aSexualRep(self.getAgent(currPop[itr])))
+                self.updateAgent(deamon.aSexualRep(self, self.getAgent(currPop[itr])))
                 itr = (itr + 1)%(len(currPop))
 
         except Exception as e:

@@ -3,7 +3,7 @@
 import random
 
 
-def generateDna(rows=10, columns=1, spread=2):
+def generateDna(numParam, spread):
     """
     INPUT       : rows = 10, columns = 10, spread = 2
     OUTPUT      : class Dna.dna structure
@@ -12,7 +12,7 @@ def generateDna(rows=10, columns=1, spread=2):
                   and whose columns is as specified and each value in the
                   matrix is in [0, 10^spread]
     """
-    retDna = [random.randint(0, 10**spread) for row in range(rows)]
+    retDna = [random.randint(0, 10**spread) for row in range(numParam)]
     return(retDna)
 
 
@@ -24,11 +24,9 @@ class AgentDna:
     all the attributes required to identify and measure the
     agent's fitness
     """
-    def __init__(self):
+    def __init__(self, numParam,  spread):
         
         self.agentID = None
         self.sessID = None
-        self.dna = generateDna()
+        self.dna = generateDna(numParam=numParam, spread=spread)
         self.fitness = 0
-    
-    
