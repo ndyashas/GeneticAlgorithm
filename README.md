@@ -7,10 +7,11 @@ Genetic Algorithm is inspired by the natural selection process in our environmen
 ga2 is a highly flexible and easy to use utility module implementing Genetic Algorithm. 
 
 ### Installation
-* clone or download this repository onto your machine
+* standard pip3 installation is supported
 ```
-git clone https://github.com/yashasbharadwaj111/GeneticAlgorithm ga2
+pip3 install ga2
 ```
+
 * import the Genetic Algorithm utility as 
 ```
 import ga2.gaDisc as gad
