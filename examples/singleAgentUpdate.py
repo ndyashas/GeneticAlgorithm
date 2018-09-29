@@ -1,7 +1,6 @@
 import random
 import ga2.gaDisc as gad
 
-
 def diff(a , b):
     """
     Difference between 2 numbers
@@ -23,8 +22,8 @@ def fitnessFun(agentObj):
     as close as we can to the target vector
     """
     summ = 0
-    target = [50, 40, 37, 63, 72, 65, 81, 45, 12, 5]
-    for i in range(len(agentObj.dna)):
+    target = [5, 7, 5, 10, 3]
+    for i in range(len(target)):
         summ += diff(agentObj.dna[i], target[i])
     addToFitness = (200 - summ)
     return(agentObj.fitness + addToFitness)
@@ -33,16 +32,27 @@ def fitnessFun(agentObj):
 if(__name__ == "__main__"):
     # running this file as main
     
-    NUMBER_OF_EPOCH = 50
-    NUMBER_OF_AGENTS = 100
-
+    NUMBER_OF_EPOCH = 25
+    NUMBER_OF_AGENTS = 25
+    NUMBER_OF_PARAM = 5
+    SPREAD = 1
+    WILD_CARD_RATE = 0.01
+    SURVIVAL_RATE = 0.05
+    MUTATION_RATE = 0.05
+    GENE_COPY = 0.9
+    
     try:
-        sess = gad.Session(agentCount=NUMBER_OF_AGENTS)
+        sess = gad.Session(agentCount=NUMBER_OF_AGENTS,
+                           numParam=NUMBER_OF_PARAM,
+                           spread = SPREAD,
+                           genecopy = GENE_COPY,
+                           survival=SURVIVAL_RATE,
+                           mutation=MUTATION_RATE)
         sess.init()
     
         epoch = 0
         while(epoch < NUMBER_OF_EPOCH):
-        
+            
             # Code for printing the details of the epoch
             print("Epoch number {} ****************".format(epoch))
             print("Average fitness is {}".format(sess.getAverageFitness()))
@@ -59,7 +69,7 @@ if(__name__ == "__main__"):
             # Generates the next generation
             sess.createNextGen()
             epoch += 1
-
+        
         print("FINAL ***************")
         print("Average fitness is {}".format(sess.getAverageFitness()))
         print("maximum fitness is {}".format(sess.getBestAgent().fitness))
@@ -70,4 +80,3 @@ if(__name__ == "__main__"):
 
     finally:
         sess.delete()
-    
