@@ -17,7 +17,7 @@ class Session:
     """
 
     def __init__(self,sessID=None, agentCount=100, numParam=10, fixParam=True,
-                 spread=2, generateMode='A'):
+                 spread=2, survival=0.05, genecopy=0.9, mutation=0.01, generateMode='A'):
 
         if(sessID is None):
             self.sessID = deamon.getNewSessionID()
@@ -26,6 +26,9 @@ class Session:
             self.fixParam = fixParam
             self.spread = spread
             self.generateMode = generateMode
+            self.mutation = mutation
+            self.genecopy = genecopy
+            self.survival = survival
             deamon.setSession(self)
 
         else:
@@ -35,6 +38,9 @@ class Session:
             self.numParam = tmpObj.numParam
             self.fixParam = tmpObj.fixParam
             self.spread = tmpObj.spread
+            self.mutation = mutation
+            self.survival = survival
+            self.genecopy = genecopy
             self.generateMode = tmpObj.generateMode
         
     def init(self):
@@ -51,9 +57,7 @@ class Session:
         
         try:
             for i in range(self.agentCount):
-                agentObj = deamon.createAgent(self,
-                                              numParam=self.numParam,
-                                              spread=self.spread)
+                agentObj = deamon.createAgent(self)
         
         except Exception as e:
             print("gaDiscrete.init failed with error as : {}".format(e))
@@ -201,18 +205,21 @@ class Session:
         """
         
         try:
-            numberOfSurvivors = int((random.randint(5, 10)/100) * self.agentCount)
+            if(self.survival > 0.95):
+                survivalPerc = 0.95
+                
+            numberOfSurvivors = int((random.uniform(self.survival, self.survival+0.05) * self.agentCount))                      
             if(numberOfSurvivors < 1):
                 numberOfSurvivors = 1
+
             listOfAgents = [(agent.agentID, agent.fitness) for agent in
                             [deamon.getAgent(self.sessID, agentID) for agentID in
                              deamon.getCurrGen(self.sessID)]]
 
             listOfAgents.sort(key=lambda x: x[1], reverse=True)
-        
             unselected = listOfAgents[numberOfSurvivors:]
-            wildCard = random.sample(unselected, int(len(unselected)*0.01))
-            finalUnselected = [agent for agent in unselected if(agent not in wildCard)]
+            wildCardEntries = random.sample(unselected, int(len(unselected)*0.01))
+            finalUnselected = [agent for agent in unselected if(agent not in wildCardEntries)]
 
             for agent in finalUnselected:
                 deamon.deleteAgent(self.sessID, agent[0])
