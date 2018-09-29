@@ -202,6 +202,8 @@ class Session:
         
         try:
             numberOfSurvivors = int((random.randint(5, 10)/100) * self.agentCount)
+            if(numberOfSurvivors < 1):
+                numberOfSurvivors = 1
             listOfAgents = [(agent.agentID, agent.fitness) for agent in
                             [deamon.getAgent(self.sessID, agentID) for agentID in
                              deamon.getCurrGen(self.sessID)]]
