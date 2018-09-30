@@ -45,13 +45,14 @@ def mutateAgentObj(agentObj, sess):
 
     currDna = agentObj.dna
     itr = 0
-    while((sess.mutation > random.random()) or (itr > int(len(currDna)/3))):
+    #change 'and' to 'or' and added itr+=1
+    while((sess.mutation > random.random()) and (itr < int(len(currDna)/3))):
 
         if(0.5 > random.random()):
             mutateVal = (sess.mutation)*(10**(sess.spread))
         else:
             mutateVal = -1 * (sess.mutation)*(10**(sess.spread))
-            
+        itr+=1
         currDna[random.randint(0, len(currDna)-1)] += mutateVal
         
     return(currDna)
