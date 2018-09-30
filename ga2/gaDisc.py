@@ -8,6 +8,7 @@ import shutil
 import random
 import ga2.gaUtils.gaDeamon as deamon
 
+
 class Session:
     """
     This is the session class which is used to access all
@@ -232,6 +233,16 @@ class Session:
 
         except Exception as e:
             print("gaDiscrete.createNextGen failed with error as : {}".format(e))
+            
+    def nn(self):
+        """
+        INPUT       : Yet to decide
+        OUTPUT      : Yet to decide
+
+        DESCRIPTION : Yet to decide
+        """
+        pass
+        
             
     def resetEnv(self):
         """
