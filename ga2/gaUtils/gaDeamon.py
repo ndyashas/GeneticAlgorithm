@@ -78,7 +78,7 @@ def aSexualRep(sess, agentObj):
             
     childObj = createAgent(sess)
     childObj.dna = childDna
-    childObj.fitness = agentObj.fitness
+    #childObj.fitness = agentObj.fitness
     childObj.dna = mutateAgentObj(childObj, sess)
     return(childObj)
         
