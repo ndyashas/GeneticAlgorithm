@@ -11,4 +11,3 @@ signal.signal(signal.SIGINT,aexit)
 signal.signal(signal.SIGABRT,aexit)
 
 version = 2.8
-mode = "UNSAFE"
