@@ -50,9 +50,9 @@ def mutateAgentObj(agentObj, sess):
     while((sess.mutation > random.random()) and (itr < int(len(currDna)/3))):
 
         if(0.5 > random.random()):
-            mutateVal = (sess.mutation)*(10**(sess.spread))
+            mutateVal = (sess.mutation)*(sess.spread)
         else:
-            mutateVal = -1 * (sess.mutation)*(10**(sess.spread))
+            mutateVal = -1 * (sess.mutation)*(sess.spread)
         itr+=1
         currDna[random.randint(0, len(currDna)-1)] += mutateVal
         
@@ -73,7 +73,7 @@ def aSexualRep(sess, agentObj):
     itr = 0
     while(itr < len(agentObj.dna)):
         if(sess.genecopy < random.random()):
-            childDna.append(random.randint(0, 10**(sess.spread)))
+            childDna.append(random.uniform(0, sess.spread))
         else:
             childDna.append(agentObj.dna[itr])
         itr += 1

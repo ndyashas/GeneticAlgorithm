@@ -12,7 +12,7 @@ def generateDna(numParam, spread):
                   and whose columns is as specified and each value in the
                   matrix is in [0, 10^spread]
     """
-    retDna = [random.randint(0, 10**spread) for row in range(numParam)]
+    retDna = [random.uniform(0, spread) for row in range(numParam)]
     return(retDna)
 
 
