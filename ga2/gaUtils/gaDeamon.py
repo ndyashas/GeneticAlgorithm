@@ -8,31 +8,34 @@ import time
 import random
 import pickle
 
+import ga2
 import ga2.gaUtils.AgentClass as AgentClass
 GA_UTIL_DIR = os.path.dirname(os.path.realpath(__file__))
 
 
 # current functions included are as follows:
 #
-# ** uses lock
-# *
-# 
-# 1 ) ** getNewSessionID()
-# 2 ) isLocked()
-# 3 ) lock()
-# 4 ) unlock()
-# 5 ) getCurrGen()
-# 6 ) setCuttGen()
-# 7 ) ** storeAgent()
-# 8 ) generateAgentID()
-# 9 ) createAgent()
-# 10) ** deleteAgent()
-# 11) getAgent()
-# 12) ** setSession()
-# 13) getSession()
-# 14) asexualRep()
-# 15) mutateAgentObj()
-# 16) sexualRep()
+# **   uses lock
+# %%   uses Disk
+# $$   legacy
+# @@   changable
+#
+# 1 ) ** %%       getNewSessionID()
+# 2 )    %%       isLocked()
+# 3 )    %%       lock()
+# 4 )    %%       unlock()
+# 5 )    %%    @@ getCurrGen()
+# 6 )    %%    @@ setCuttGen()
+# 7 ) ** %%    @@ storeAgent()
+# 8 )    %%    @@ generateAgentID()
+# 9 )             createAgent()
+# 10) ** %%    @@ deleteAgent()
+# 11)    %%    @@ getAgent()
+# 12) **    $$    setSession()
+# 13)    %% $$    getSession()
+# 14)             asexualRep()
+# 15)             mutateAgentObj()
+# 16)          @@ sexualRep()
 
 
 def mutateAgentObj(agentObj, sess):

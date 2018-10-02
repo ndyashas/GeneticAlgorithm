@@ -19,29 +19,21 @@ class Session:
     def __init__(self,sessID=None, agentCount=100, numParam=10, fixParam=True,
                  spread=2, survival=0.05, genecopy=0.9, mutation=0.01, generateMode='A'):
 
-        if(sessID is None):
-            self.sessID = deamon.getNewSessionID()
-            self.agentCount = agentCount
-            self.numParam = numParam
-            self.fixParam = fixParam
-            self.spread = spread
-            self.generateMode = generateMode
-            self.mutation = mutation
-            self.genecopy = genecopy
-            self.survival = survival
-            deamon.setSession(self)
 
-        else:
-            tmpObj = deamon.getSession(sessID)
-            self.sessID = tmpObj.sessID
-            self.agentCount = tmpObj.agentCount
-            self.numParam = tmpObj.numParam
-            self.fixParam = tmpObj.fixParam
-            self.spread = tmpObj.spread
-            self.mutation = mutation
-            self.survival = survival
-            self.genecopy = genecopy
-            self.generateMode = tmpObj.generateMode
+        self.sessID        = deamon.getNewSessionID()
+        self.spread        = spread
+        self.numParam      = numParam
+        self.fixParam      = fixParam
+        self.mutation      = mutation
+        self.genecopy      = genecopy
+        self.survival      = survival
+        self.agentCount    = agentCount
+        self.generateMode  = generateMode
+
+        self.currGen       = None
+        self.agentBasket   = None
+        self.mode          = ga2.mode
+        
         
     def init(self):
         """
