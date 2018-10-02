@@ -4,6 +4,7 @@
 # given point.
 
 import os
+import ga2
 import shutil
 import random
 import ga2.gaUtils.gaDeamon as deamon
@@ -17,7 +18,7 @@ class Session:
     """
 
     def __init__(self,sessID=None, agentCount=100, numParam=10, fixParam=True,
-                 spread=2, survival=0.05, genecopy=0.9, mutation=0.01, generateMode='A'):
+                 spread=2, survival=0.05, genecopy=0.9, mutation=0.01, generateMode='A',mode='UNSAFE'):
 
 
         self.sessID        = deamon.getNewSessionID()
@@ -30,9 +31,9 @@ class Session:
         self.agentCount    = agentCount
         self.generateMode  = generateMode
 
-        self.currGen       = None
-        self.agentBasket   = None
-        self.mode          = ga2.mode
+        self.currGen       = set()
+        self.agentBasket   = dict()
+        self.mode          = mode
         
         
     def init(self):
@@ -47,12 +48,13 @@ class Session:
         using the deamon function createAgent
         """
         
-        try:
+        if(1):
             for i in range(self.agentCount):
                 agentObj = deamon.createAgent(self)
-        
+        '''
         except Exception as e:
             print("gaDiscrete.init failed with error as : {}".format(e))
+        '''
         
     def getAllAgents(self):
         """
@@ -70,7 +72,7 @@ class Session:
         """
         
         try:
-            toRet = deamon.getCurrGen(self.sessID)
+            toRet = deamon.getCurrGen(self)
         except Exception as e:
             print("gaDiscrete.getAllAgents failed with error as : {}".format(e))
             toRet = None
@@ -91,7 +93,7 @@ class Session:
         """
 
         try:
-            agentObj = deamon.getAgent(self.sessID, agentID)
+            agentObj = deamon.getAgent(self, agentID)
             return(agentObj)
         
         except Exception as e:
@@ -111,7 +113,7 @@ class Session:
         """
 
         try:
-            return(deamon.storeAgent(agentObj))
+            return(deamon.storeAgent( self, agentObj))
         
         except Exception as e:
             print("gaDiscrete.updateAgent failed with error as : {}".format(e))            
@@ -130,18 +132,19 @@ class Session:
         uses deamon functions getCurrGen, getAgent
         """
 
-        try:
+        if(1):
+            
             bestAgent = None
-            currGen = deamon.getCurrGen(self.sessID)
+            currGen = deamon.getCurrGen(self)
             for agentID in currGen:
-                agent = deamon.getAgent(self.sessID, agentID)
+                agent = deamon.getAgent(self, agentID)
                 if((bestAgent is None) or (bestAgent.fitness < agent.fitness)):
                     bestAgent = agent
-                    
+        '''            
         except Exception as e:
             print("gaDiscrete.getBestAgent failed with error as : {}".format(e))
             bestAgent = None
-        
+        '''
         return(bestAgent)
 
     def getAverageFitness(self):
@@ -159,9 +162,9 @@ class Session:
 
         try:
             totalFitness = 0
-            currGen = deamon.getCurrGen(self.sessID)
+            currGen = deamon.getCurrGen(self)
             for agentID in currGen:
-                totalFitness += deamon.getAgent(self.sessID, agentID).fitness
+                totalFitness += deamon.getAgent(self, agentID).fitness
 
         except Exception:
             print("gaDiscrete.getAverageFitness failed with error as : {}".format(e))
@@ -196,7 +199,7 @@ class Session:
         slightly modified from its parent
         """
         
-        try:
+        if(1):
             if(self.survival > 0.95):
                 survivalPerc = 0.95
                 
@@ -205,8 +208,8 @@ class Session:
                 numberOfSurvivors = 1
 
             listOfAgents = [(agent.agentID, agent.fitness) for agent in
-                            [deamon.getAgent(self.sessID, agentID) for agentID in
-                             deamon.getCurrGen(self.sessID)]]
+                            [deamon.getAgent(self, agentID) for agentID in
+                             deamon.getCurrGen(self)]]
 
             listOfAgents.sort(key=lambda x: x[1], reverse=True)
             unselected = listOfAgents[numberOfSurvivors:]
@@ -214,21 +217,21 @@ class Session:
             finalUnselected = [agent for agent in unselected if(agent not in wildCardEntries)]
 
             for agent in finalUnselected:
-                deamon.deleteAgent(self.sessID, agent[0])
+                deamon.deleteAgent(self, agent[0])
 
-            currPop = list(deamon.getCurrGen(self.sessID))
+            currPop = list(deamon.getCurrGen(self))
             itr = 0
-            while(len(deamon.getCurrGen(self.sessID)) < self.agentCount):
+            while(len(deamon.getCurrGen(self)) < self.agentCount):
                 if(self.generateMode == 'A'):
                     self.updateAgent(deamon.aSexualRep(self, self.getAgent(currPop[itr])))
                 else:
                     self.updateAgent(deamon.sexualRep(self, self.getAgent(currPop[itr]),
                                                       self.getAgent(currPop[(itr + 1)%(len(currPop))])))
                 itr = (itr + 1)%(len(currPop))
-
+        '''
         except Exception as e:
             print("gaDiscrete.createNextGen failed with error as : {}".format(e))
-            
+        '''
     def resetEnv(self):
         """
         INPUT       : None
