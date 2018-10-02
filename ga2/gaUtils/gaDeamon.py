@@ -72,7 +72,7 @@ def aSexualRep(sess, agentObj):
     itr = 0
     while(itr < len(agentObj.dna)):
         if(sess.genecopy < random.random()):
-            childDna.append(random.randint(0, 10**(sess.spread)))
+            childDna.append(random.uniform(0, 10**(sess.spread)))
         else:
             childDna.append(agentObj.dna[itr])
         itr += 1
