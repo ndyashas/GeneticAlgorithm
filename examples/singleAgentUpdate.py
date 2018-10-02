@@ -18,7 +18,7 @@ def meanSquareError(target, op):
 
 if(__name__ == "__main__"):
     # running this file as main
-    TARGET_VECTOR_LEN = 5
+    TARGET_VECTOR_LEN = 50
     
     SPREAD = 1
     target = [random.uniform(0, SPREAD) for i in range(TARGET_VECTOR_LEN)]
@@ -28,7 +28,8 @@ if(__name__ == "__main__"):
     SURVIVAL_RATE = 0.01
     MUTATION_RATE = 0.01
     GENE_COPY = 0.95
-    GEN_MODE = 'A'
+    GEN_MODE = 'S'
+    MODE = 'UNSAFE'
     
     try:
         sess = gad.Session(agentCount=NUMBER_OF_AGENTS,
@@ -37,7 +38,8 @@ if(__name__ == "__main__"):
                            genecopy = GENE_COPY,
                            survival=SURVIVAL_RATE,
                            mutation=MUTATION_RATE,
-                           generateMode=GEN_MODE)
+                           generateMode=GEN_MODE,
+                           mode=MODE)
         sess.init()
     
         epoch = 0
@@ -68,13 +70,14 @@ if(__name__ == "__main__"):
             epoch += 1
             if(error < 5):
                 break
-           
+      
     except Exception as e:
         print("Exception cought with message as {}".format(e))
 
     finally:
         sess.delete()
-        
+    
+    
     stop = time.time()
     sec = stop - start
     hours = sec // 3600
