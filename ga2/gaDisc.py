@@ -30,9 +30,11 @@ class Session:
         self.survival      = survival
         self.agentCount    = agentCount
         self.generateMode  = generateMode
-
+        
         self.currGen       = set()
         self.agentBasket   = dict()
+        self.nextAgentID   = 0
+        self.lock          = 0
         self.mode          = mode
         
         

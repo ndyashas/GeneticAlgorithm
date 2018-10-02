@@ -179,7 +179,6 @@ def getNewSessionID():
                   first session
     """
 
-    lock()
     try:
         
         sessFp = open(GA_UTIL_DIR+"/utilFiles/SESSIONNEXT.smtf", "r")
@@ -197,14 +196,11 @@ def getNewSessionID():
 
     except Exception:
         print("Error updating the SESSIONNEXT.smtf file")
-
-    unlock()
-    lock(sessID)
-    unlock(sessID)
+        
     return(sessID)
 
 
-def isLocked(sessID=None):
+def isLocked(sess):
     """
     INPUT       : sessID = None
     OUTPUT      : current status of the lock based on 
@@ -213,25 +209,29 @@ def isLocked(sessID=None):
     DESCRIPTION : checks the locks, based on sessID
     """
 
-    if(sessID is not None):
-        smtf = "tmp" + str(sessID) + "/LOCK.smtf"
-    else:
-        smtf = "SESSIONLOCK.smtf" 
+    if(sess.mode == 'SAFE'):
+        sessID = 10 # temposrary assignment
+        if(sessID is not None):
+            smtf = "tmp" + str(sessID) + "/LOCK.smtf"
+        else:
+            smtf = "SESSIONLOCK.smtf" 
     
-    try:
-        if(not os.path.isdir(GA_UTIL_DIR+"/utilFiles")):
-            os.mkdir(GA_UTIL_DIR+"/utilFiles")
-        lckfp = open(GA_UTIL_DIR+"/utilFiles/"+smtf, "r")
-        lckpos = int(lckfp.readline())
-        lckfp.close()
+        try:
+            
+            if(not os.path.isdir(GA_UTIL_DIR+"/utilFiles")):
+                os.mkdir(GA_UTIL_DIR+"/utilFiles")
+            lckfp = open(GA_UTIL_DIR+"/utilFiles/"+smtf, "r")
+            lckpos = int(lckfp.readline())
+            lckfp.close()
 
-    except Exception:
-        lckpos = 0
+        except Exception:
+            lckpos = 0
+            
+        return(lckpos)
+    
 
-    return(lckpos)
-
-
-def lock(sessID=None):
+    
+def lock(sess):
     """
     INPUT       : sessID = None
     OUTPUT      : returns 1 if locked, 0 on error
@@ -240,31 +240,34 @@ def lock(sessID=None):
                   else , does it for the entire session
     """
 
-    while(isLocked(sessID)):
-        time.sleep(0.5)
-
-    if(sessID is not None):
-        smtf = "tmp" + str(sessID) + "/smtf/LOCK.smtf"
-    else:
-        smtf = "SESSIONLOCK.smtf" 
-        
-    try:
+    if(sess.mode == 'SAFE'):
+        sessID = sess.sessID # temporary assignment
+        while(isLocked(sess)):
+            time.sleep(0.5)
+            
+        if(sessID is not None):
+            smtf = "tmp" + str(sessID) + "/smtf/LOCK.smtf"
+        else:
+            smtf = "SESSIONLOCK.smtf" 
+            
+        try:
+              
+            lckfp = open(GA_UTIL_DIR+"/utilFiles/"+smtf, "w")
+            lckfp.close()
+            
+        except Exception:
+            os.mkdir(GA_UTIL_DIR+"/utilFiles/"+"tmp"+str(sessID))
+            os.mkdir(GA_UTIL_DIR+"/utilFiles/"+"tmp"+str(sessID)+"/smtf")
+            os.mkdir(GA_UTIL_DIR+"/utilFiles/"+"tmp"+str(sessID)+"/dnaPool")
+            
+        lckval = 1
         lckfp = open(GA_UTIL_DIR+"/utilFiles/"+smtf, "w")
+        lckfp.write(str(lckval))
         lckfp.close()
-    
-    except Exception:
-        os.mkdir(GA_UTIL_DIR+"/utilFiles/"+"tmp"+str(sessID))
-        os.mkdir(GA_UTIL_DIR+"/utilFiles/"+"tmp"+str(sessID)+"/smtf")
-        os.mkdir(GA_UTIL_DIR+"/utilFiles/"+"tmp"+str(sessID)+"/dnaPool")
-        
-    lckval = 1
-    lckfp = open(GA_UTIL_DIR+"/utilFiles/"+smtf, "w")
-    lckfp.write(str(lckval))
-    lckfp.close()
-    return(lckval)
+        return(lckval)
 
 
-def unlock(sessID=None):
+def unlock(sess):
     """
     INPUT       : sessID = None
     OUTPUT      : 1 on successful unlocking 0 on unsuccessful
@@ -273,22 +276,24 @@ def unlock(sessID=None):
                   else , does it for the entire session
     """
 
-    if(sessID is not None):
-        smtf = "tmp" + str(sessID) + "/smtf/LOCK.smtf"
-    else:
-        smtf = "SESSIONLOCK.smtf"
-
-    try:
-        lckfp = open(GA_UTIL_DIR+"/utilFiles/"+smtf, "w")
-        lckfp.write(str(0))
-        lckfp.close()
+    if(sess.mode == 'SAFE'):
+        sessID = sess.sessID
+        if(sessID is not None):
+            smtf = "tmp" + str(sessID) + "/smtf/LOCK.smtf"
+        else:
+            smtf = "SESSIONLOCK.smtf"
+        try:
+                
+            lckfp = open(GA_UTIL_DIR+"/utilFiles/"+smtf, "w")
+            lckfp.write(str(0))
+            lckfp.close()
+            
+        except Exception:
+            print("Couldnt unlock file !")
+            return(0)
         
-    except Exception:
-        print("Couldnt unlock file !")
-        return(0)
+        return(1)
     
-    return(1)
-
 
 def getCurrGen(sess):
     """
@@ -346,7 +351,7 @@ def storeAgent(sess, agentObj):
     """
     
     currAgents = getCurrGen(sess)
-    lock(agentObj.sessID)
+    lock(sess)
     if(1):
         if(sess.mode == 'SAFE'):
             tpfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(agentObj.sessID)+"/dnaPool/dna"
@@ -363,7 +368,7 @@ def storeAgent(sess, agentObj):
         return(0)
     '''
     setCurrGen( sess, currAgents)
-    unlock(agentObj.sessID)
+    unlock(sess)
     return(agentObj.agentID)
 
 
@@ -392,7 +397,7 @@ def getAgent(sess, agentID):
     return(agentObj)
 
 
-def generateAgentID(sessID):
+def generateAgentID(sess):
     """
     INPUT       : None
     OUTPUT      : Agent object
@@ -400,25 +405,32 @@ def generateAgentID(sessID):
     DESCRIPTION : Creates and stores the newly created AgentDna
                   object in that particular session's directory
     """
-    try:
-        if(not os.path.isdir(GA_UTIL_DIR+"/utilFiles")):
-            os.mkdir(GA_UTIL_DIR+"/utilFiles")
-        nextfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(sessID)+"/smtf/NEXTID.smtf", "r")
-        Idp = int(nextfp.readline())
-        nextfp.close()
-    except Exception:
-        Idp = 0
+    if(sess.mode == 'SAFE'):
+        try:
+            
+            if(not os.path.isdir(GA_UTIL_DIR+"/utilFiles")):
+                os.mkdir(GA_UTIL_DIR+"/utilFiles")
+            nextfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(sess.sessID)+"/smtf/NEXTID.smtf", "r")
+            Idp = int(nextfp.readline())
+            nextfp.close()
+            
+        except Exception:
+            Idp = 0
 
-    try:
-        nextfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(sessID)+"/smtf/NEXTID.smtf", "w")
-        nextfp.write(str(Idp+1))
-        nextfp.close()
-        return(Idp)
-
-    except Exception:
-        print("error in generate agent ID, couldnt write")
-        return(-1)
-
+        try:
+            nextfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(sess.sessID)+"/smtf/NEXTID.smtf", "w")
+            nextfp.write(str(Idp+1))
+            nextfp.close()
+            return(Idp)
+        
+        except Exception:
+            print("error in generate agent ID, couldnt write")
+            return(-1)
+    else:
+        sess.nextAgentID += 1
+        return(sess.nextAgentID -1)
+    
+            
 
 def createAgent(sess):
     """
@@ -431,7 +443,7 @@ def createAgent(sess):
     
     agent = AgentClass.AgentDna(sess.numParam, sess.spread)
     agent.sessID = sess.sessID
-    agent.agentID = generateAgentID(sess.sessID)
+    agent.agentID = generateAgentID(sess)
 
     storeAgent(sess, agent)
     return(agent)
@@ -445,7 +457,7 @@ def deleteAgent(sess, agentID):
                   object in that particular session's directory
     """
     
-    lock(sess.sessID)
+    lock(sess)
     if(1):
         currGen = getCurrGen(sess)
         if(agentID in currGen):
@@ -470,4 +482,5 @@ def deleteAgent(sess, agentID):
     finally:
         unlock(sess.sessID)
     '''
+    unlock(sess)
     return(1)
