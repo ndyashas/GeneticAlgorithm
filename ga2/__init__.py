@@ -9,3 +9,5 @@ def aexit(a,b):
 signal.signal(signal.SIGTERM,aexit)
 signal.signal(signal.SIGINT,aexit)
 signal.signal(signal.SIGABRT,aexit)
+
+version = 2.8
