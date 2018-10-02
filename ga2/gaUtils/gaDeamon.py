@@ -32,6 +32,7 @@ GA_UTIL_DIR = os.path.dirname(os.path.realpath(__file__))
 # 13) getSession()
 # 14) asexualRep()
 # 15) mutateAgentObj()
+# 16) sexualRep()
 
 
 def mutateAgentObj(agentObj, sess):
@@ -79,10 +80,42 @@ def aSexualRep(sess, agentObj):
             
     childObj = createAgent(sess)
     childObj.dna = childDna
-    #childObj.fitness = agentObj.fitness
     childObj.dna = mutateAgentObj(childObj, sess)
     return(childObj)
-        
+
+
+def sexualRep(sess, parent1Obj, parent2Obj):
+    """
+    INPUT       : parent1Obj, parent2Obj
+    OUTPUT      : child agentObj
+
+    DESCRIPTION : Creates and stores the newly created AgentDna
+                  object in that particular session's directory
+                  mixes the dna from both the parents to generate
+                  child dna.
+    """
+    childDna = []
+    parentMixDna = []
+
+    for i in range(len(parent1Obj.dna)):
+        if(random.random() >= 0.5):
+            parentMixDna.append(parent1Obj.dna[i])
+        else:
+            parentMixDna.append(parent2Obj.dna[i])
+
+    itr = 0
+    while(itr < len(parentMixDna)):
+        if(sess.genecopy < random.random()):
+            childDna.append(random.uniform(0, sess.spread))
+        else:
+            childDna.append(parentMixDna[itr])
+        itr += 1
+
+    childObj = createAgent(sess)
+    childObj.dna = childDna
+    childObj.dna = mutateAgentObj(childObj, sess)
+    return(childObj)
+
 
 def getSession(sessID):
     """

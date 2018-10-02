@@ -227,7 +227,11 @@ class Session:
             currPop = list(deamon.getCurrGen(self.sessID))
             itr = 0
             while(len(deamon.getCurrGen(self.sessID)) < self.agentCount):
-                self.updateAgent(deamon.aSexualRep(self, self.getAgent(currPop[itr])))
+                if(self.generateMode == 'A'):
+                    self.updateAgent(deamon.aSexualRep(self, self.getAgent(currPop[itr])))
+                else:
+                    self.updateAgent(deamon.sexualRep(self, self.getAgent(currPop[itr]),
+                                                      self.getAgent(currPop[(itr + 1)%(len(currPop))])))
                 itr = (itr + 1)%(len(currPop))
 
         except Exception as e:
