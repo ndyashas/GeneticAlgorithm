@@ -5,7 +5,7 @@ import ga2.gaDisc as gad
 
 
 def fitnessFun(agentObj, target, spread):
-    return((10**spread)-(meanSquareError(agentObj.dna, target)))
+    return((spread)-(meanSquareError(agentObj.dna, target)))
 
 def meanSquareError(target, op):
     error = 0
@@ -18,16 +18,17 @@ def meanSquareError(target, op):
 
 if(__name__ == "__main__"):
     # running this file as main
-    TARGET_VECTOR_LEN = 100
+    TARGET_VECTOR_LEN = 5
     
     SPREAD = 1
-    target = [random.uniform(0, 10**SPREAD) for i in range(TARGET_VECTOR_LEN)]
+    target = [random.uniform(0, SPREAD) for i in range(TARGET_VECTOR_LEN)]
     NUMBER_OF_EPOCH = 50000
     NUMBER_OF_AGENTS = 200
     NUMBER_OF_PARAM = len(target)
     SURVIVAL_RATE = 0.01
     MUTATION_RATE = 0.01
     GENE_COPY = 0.95
+    GEN_MODE = 'A'
     
     try:
         sess = gad.Session(agentCount=NUMBER_OF_AGENTS,
@@ -35,7 +36,8 @@ if(__name__ == "__main__"):
                            spread = SPREAD,
                            genecopy = GENE_COPY,
                            survival=SURVIVAL_RATE,
-                           mutation=MUTATION_RATE)
+                           mutation=MUTATION_RATE,
+                           generateMode=GEN_MODE)
         sess.init()
     
         epoch = 0
@@ -57,7 +59,7 @@ if(__name__ == "__main__"):
             print("Average fitness is      {}".format(sess.getAverageFitness()))
             print("maximum fitness is      {}".format(sess.getBestAgent().fitness))
             print("best agent agentID is   {}".format(sess.getBestAgent().agentID))
-            error = (meanSquareError(target, sess.getBestAgent().dna)/(10**SPREAD))*100
+            error = (meanSquareError(target, sess.getBestAgent().dna)/(SPREAD))*100
             print("Error   % is            {}".format(error))
             
                 
