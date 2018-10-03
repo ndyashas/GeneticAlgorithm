@@ -10,4 +10,4 @@ signal.signal(signal.SIGTERM,aexit)
 signal.signal(signal.SIGINT,aexit)
 signal.signal(signal.SIGABRT,aexit)
 
-version = 0.2.9
+version = "0.2.9"
