@@ -26,7 +26,7 @@ if(__name__ == "__main__"):
     NUMBER_OF_AGENTS = 200
     NUMBER_OF_PARAM = len(target)
     SURVIVAL_RATE = 0.01
-    MUTATION_RATE = 0.1
+    MUTATION_RATE = 0.05
     GENE_COPY = 0.95
     GEN_MODE = 'S'
     MODE = 'UNSAFE'

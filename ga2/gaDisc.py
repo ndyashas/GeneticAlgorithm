@@ -208,7 +208,7 @@ class Session:
             listOfAgents.sort(key=lambda x: x[1], reverse=True)
             unselected = listOfAgents[numberOfSurvivors:]
             # wildcard zero
-            wildCardEntries = random.sample(unselected, int(len(unselected)*0.01))
+            wildCardEntries = random.sample(unselected, int(len(unselected)*0.00))
             finalUnselected = [agent for agent in unselected if(agent not in wildCardEntries)]
 
             for agent in finalUnselected:
@@ -222,7 +222,15 @@ class Session:
                 else:
                     self.updateAgent(deamon.sexualRep(self, self.getAgent(currPop[itr]),
                                                       self.getAgent(currPop[(itr + 1)%(len(currPop))])))
+                    #self.updateAgent(deamon.sexualRep(self, self.getAgent(currPop[itr]),
+                    #                                 self.getAgent(currPop[(itr + 1)%(size)])))
                 itr = (itr + 1)%(len(currPop))
+                '''
+                itr = (itr + 1)%(size)
+                if(itr == 0):
+                    if(size != 1):
+                        size -= 1
+                '''
         
         except Exception as e:
             print("gaDisc.createNextGen failed with error as : {}".format(e))
