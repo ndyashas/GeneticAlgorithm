@@ -21,11 +21,13 @@ class Session:
     """
 
     def __init__(self,sessID=None, agentCount=100, numParam=10, fixParam=True,
-                 spread=2, survival=0.05, genecopy=0.9, mutation=0.01, generateMode='A',mode='UNSAFE'):
+                 spread=2, survival=0.05, genecopy=0.9, mutation=0.01, generateMode='A',
+                 mode='UNSAFE', valType='FLOAT'):
         
 
         self.sessID        = deamon.getNewSessionID()
         self.spread        = spread
+        self.valType       = valType
         self.numParam      = numParam
         self.fixParam      = fixParam
         self.mutation      = mutation
@@ -205,6 +207,7 @@ class Session:
 
             listOfAgents.sort(key=lambda x: x[1], reverse=True)
             unselected = listOfAgents[numberOfSurvivors:]
+            # wildcard zero
             wildCardEntries = random.sample(unselected, int(len(unselected)*0.01))
             finalUnselected = [agent for agent in unselected if(agent not in wildCardEntries)]
 

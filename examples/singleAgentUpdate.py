@@ -18,18 +18,19 @@ def meanSquareError(target, op):
 
 if(__name__ == "__main__"):
     # running this file as main
-    TARGET_VECTOR_LEN = 50
+    TARGET_VECTOR_LEN = 100
     
-    SPREAD = 1
+    SPREAD = 10
     target = [random.uniform(0, SPREAD) for i in range(TARGET_VECTOR_LEN)]
-    NUMBER_OF_EPOCH = 50000
+    NUMBER_OF_EPOCH = 500000
     NUMBER_OF_AGENTS = 200
     NUMBER_OF_PARAM = len(target)
     SURVIVAL_RATE = 0.01
-    MUTATION_RATE = 0.01
+    MUTATION_RATE = 0.1
     GENE_COPY = 0.95
     GEN_MODE = 'S'
     MODE = 'UNSAFE'
+    VAL_TYPE = 'FLOAT'
     
     try:
         sess = gad.Session(agentCount=NUMBER_OF_AGENTS,
@@ -39,7 +40,8 @@ if(__name__ == "__main__"):
                            survival=SURVIVAL_RATE,
                            mutation=MUTATION_RATE,
                            generateMode=GEN_MODE,
-                           mode=MODE)
+                           mode=MODE,
+                           valType=VAL_TYPE)
         sess.init()
     
         epoch = 0
@@ -64,7 +66,8 @@ if(__name__ == "__main__"):
             error = (meanSquareError(target, sess.getBestAgent().dna)/(SPREAD))*100
             print("Error   % is            {}".format(error))
             
-                
+            #print("Best agent              {}".format(sess.getBestAgent().dna))
+            #print("Target agent            {}".format(target))
             # Generates the next generation
             sess.createNextGen()
             epoch += 1
