@@ -52,6 +52,7 @@ def mutateAgentObj(agentObj, sess):
     currDna = agentObj.dna
     itr = 0
     #change 'and' to 'or' and added itr+=1
+    
     while((sess.mutation > random.random()) and (itr < int(len(currDna)/3))):
 
         if(0.5 > random.random()):
@@ -78,7 +79,10 @@ def aSexualRep(sess, agentObj):
     itr = 0
     while(itr < len(agentObj.dna)):
         if(sess.genecopy < random.random()):
-            childDna.append(random.uniform(0, sess.spread))
+            if(sess.valType == 'FLOAT'):
+                childDna.append(random.uniform(0, sess.spread))
+            else:
+                childDna.append(random.randint(0, sess.spread))
         else:
             childDna.append(agentObj.dna[itr])
         itr += 1
@@ -111,7 +115,10 @@ def sexualRep(sess, parent1Obj, parent2Obj):
     itr = 0
     while(itr < len(parentMixDna)):
         if(sess.genecopy < random.random()):
-            childDna.append(random.uniform(0, sess.spread))
+            if(sess.valType == 'FLOAT'):
+                childDna.append(random.uniform(0, sess.spread))
+            else:
+                childDna.append(random.randint(0, sess.spread))
         else:
             childDna.append(parentMixDna[itr])
         itr += 1
@@ -441,7 +448,7 @@ def createAgent(sess):
                   object in that particular session's directory
     """
     
-    agent = AgentClass.AgentDna(sess.numParam, sess.spread)
+    agent = AgentClass.AgentDna(sess)
     agent.sessID = sess.sessID
     agent.agentID = generateAgentID(sess)
 
