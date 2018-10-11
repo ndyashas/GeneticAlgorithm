@@ -248,21 +248,27 @@ class Session:
         agents are deleted (killed ?). Uses the deamon (pun intended)
         functions setSession which registeres this session for future use
         """
-        
-        try:            
-            sessDir = deamon.GA_UTIL_DIR + "/utilFiles/tmp" + str(self.sessID)
-            shutil.rmtree(sessDir+"/smtf")
-            shutil.rmtree(sessDir+"/dnaPool")
-            os.mkdir(sessDir+"/smtf")
-            os.mkdir(sessDir+"/dnaPool")
-            fp = open(sessDir+"/smtf/LOCK.smtf", "w")
-            fp.write(str(0))
-            fp.close()
-            deamon.setSession(self)
-            
-        except Exception as e:
-            print("gaDisc.resetEnv failed with error as : {}".format(e))
-            
+
+        if(self.mode == 'SAFE'):
+            try:            
+                sessDir = deamon.GA_UTIL_DIR + "/utilFiles/tmp" + str(self.sessID)
+                shutil.rmtree(sessDir+"/smtf")
+                shutil.rmtree(sessDir+"/dnaPool")
+                os.mkdir(sessDir+"/smtf")
+                os.mkdir(sessDir+"/dnaPool")
+                fp = open(sessDir+"/smtf/LOCK.smtf", "w")
+                fp.write(str(0))
+                fp.close()
+                deamon.setSession(self)
+                
+            except Exception as e:
+                print("gaDisc.resetEnv failed with error as : {}".format(e))
+        else:
+            self.currGen       = set()
+            self.agentBasket   = dict()
+            self.nextAgentID   = 0
+            self.lock          = 0
+
 
     def delete(self):
         """
