@@ -10,7 +10,7 @@ setuptools.setup(
     author_email="yashasbharadwaj111@gmail.com",
     description="A simple robust Genetic Algorithm utility",
     long_description=long_description,
-    long_description_content_type="text/markdown",
+    long_description_content_type='text/markdown',
     url="https://github.com/yashasbharadwaj111/GeneticAlgorithm",
     packages=setuptools.find_packages(),
     classifiers=[
