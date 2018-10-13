@@ -1,4 +1,4 @@
-from ga2.gaUtils.gaDeamon import *
+from ga2.gaUtils.gaDaemon import *
 from . import gaDisc 
 import os,signal
 
