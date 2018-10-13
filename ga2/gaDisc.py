@@ -9,7 +9,7 @@ import os
 import ga2
 import shutil
 import random
-import ga2.gaUtils.gaDeamon as deamon
+import ga2.gaUtils.gaDaemon as daemon
 
 class Session:
     """
@@ -25,7 +25,7 @@ class Session:
                  mode='UNSAFE', valType='FLOAT'):
         
 
-        self.sessID        = deamon.getNewSessionID()
+        self.sessID        = daemon.getNewSessionID()
         self.spread        = spread
         self.valType       = valType
         self.numParam      = numParam
@@ -53,7 +53,7 @@ class Session:
         
         try:
             for i in range(self.agentCount):
-                agentObj = deamon.createAgent(self)
+                agentObj = daemon.createAgent(self)
         
         except Exception as e:
             print("gaDisc.init failed with error as : {}".format(e))
@@ -69,7 +69,7 @@ class Session:
         """
         
         try:
-            toRet = deamon.getCurrGen(self)
+            toRet = daemon.getCurrGen(self)
         except Exception as e:
             print("gaDisc.getAllAgents failed with error as : {}".format(e))
             toRet = None
@@ -87,7 +87,7 @@ class Session:
         """
 
         try:
-            agentObj = deamon.getAgent(self, agentID)
+            agentObj = daemon.getAgent(self, agentID)
             return(agentObj)
         
         except Exception as e:
@@ -104,7 +104,7 @@ class Session:
         """
 
         try:
-            return(deamon.storeAgent( self, agentObj))
+            return(daemon.storeAgent( self, agentObj))
         
         except Exception as e:
             print("gaDisc.updateAgent failed with error as : {}".format(e))
@@ -121,15 +121,15 @@ class Session:
         This is used to retrieve the best agent in the current
         pool of agents based on their fitness value with
         higher fitness corresponding to being better
-        uses deamon functions getCurrGen, getAgent
+        uses daemon functions getCurrGen, getAgent
         """
 
         try:
             
             bestAgent = None
-            currGen = deamon.getCurrGen(self)
+            currGen = daemon.getCurrGen(self)
             for agentID in currGen:
-                agent = deamon.getAgent(self, agentID)
+                agent = daemon.getAgent(self, agentID)
                 if((bestAgent is None) or (bestAgent.fitness < agent.fitness)):
                     bestAgent = agent
                     
@@ -149,15 +149,15 @@ class Session:
         DESCRIPTION : Self explanatory from OUTPUT
 
         This function is used to get the average fitness value of
-        agents in the current session, this uses deamon functions
+        agents in the current session, this uses daemon functions
         getCurrGen, getAgent
         """
 
         try:
             totalFitness = 0
-            currGen = deamon.getCurrGen(self)
+            currGen = daemon.getCurrGen(self)
             for agentID in currGen:
-                totalFitness += deamon.getAgent(self, agentID).fitness
+                totalFitness += daemon.getAgent(self, agentID).fitness
 
         except Exception as e:
             print("gaDisc.getAverageFitness failed with error as : {}".format(e))
@@ -187,7 +187,7 @@ class Session:
         
         all the unselected agents are deleted (killed ?)
         now the current population is used to create new children
-        by calling a deamon function aSexualRep, which returns a
+        by calling a daemon function aSexualRep, which returns a
         new agentObj as a child when a parent agentObj is sent
         this new child-agentObj will inherit the fitness value and
         slightly modified from its parent, (Needs optimisation).
@@ -202,8 +202,8 @@ class Session:
                 numberOfSurvivors = 1
 
             listOfAgents = [(agent.agentID, agent.fitness) for agent in
-                            [deamon.getAgent(self, agentID) for agentID in
-                             deamon.getCurrGen(self)]]
+                            [daemon.getAgent(self, agentID) for agentID in
+                             daemon.getCurrGen(self)]]
 
             listOfAgents.sort(key=lambda x: x[1], reverse=True)
             unselected = listOfAgents[numberOfSurvivors:]
@@ -212,25 +212,17 @@ class Session:
             finalUnselected = [agent for agent in unselected if(agent not in wildCardEntries)]
 
             for agent in finalUnselected:
-                deamon.deleteAgent(self, agent[0])
+                daemon.deleteAgent(self, agent[0])
 
-            currPop = list(deamon.getCurrGen(self))
+            currPop = list(daemon.getCurrGen(self))
             itr = 0
-            while(len(deamon.getCurrGen(self)) < self.agentCount):
+            while(len(daemon.getCurrGen(self)) < self.agentCount):
                 if(self.generateMode == 'A'):
-                    self.updateAgent(deamon.aSexualRep(self, self.getAgent(currPop[itr])))
+                    self.updateAgent(daemon.aSexualRep(self, self.getAgent(currPop[itr])))
                 else:
-                    self.updateAgent(deamon.sexualRep(self, self.getAgent(currPop[itr]),
+                    self.updateAgent(daemon.sexualRep(self, self.getAgent(currPop[itr]),
                                                       self.getAgent(currPop[(itr + 1)%(len(currPop))])))
-                    #self.updateAgent(deamon.sexualRep(self, self.getAgent(currPop[itr]),
-                    #                                 self.getAgent(currPop[(itr + 1)%(size)])))
                 itr = (itr + 1)%(len(currPop))
-                '''
-                itr = (itr + 1)%(size)
-                if(itr == 0):
-                    if(size != 1):
-                        size -= 1
-                '''
         
         except Exception as e:
             print("gaDisc.createNextGen failed with error as : {}".format(e))
@@ -245,13 +237,13 @@ class Session:
         
         This function effectively resets the session to the
         "Just created form" all the meta data files along with previous
-        agents are deleted (killed ?). Uses the deamon (pun intended)
+        agents are deleted (killed ?). Uses the daemon (pun intended)
         functions setSession which registeres this session for future use
         """
 
         if(self.mode == 'SAFE'):
             try:            
-                sessDir = deamon.GA_UTIL_DIR + "/utilFiles/tmp" + str(self.sessID)
+                sessDir = daemon.GA_UTIL_DIR + "/utilFiles/tmp" + str(self.sessID)
                 shutil.rmtree(sessDir+"/smtf")
                 shutil.rmtree(sessDir+"/dnaPool")
                 os.mkdir(sessDir+"/smtf")
@@ -259,7 +251,7 @@ class Session:
                 fp = open(sessDir+"/smtf/LOCK.smtf", "w")
                 fp.write(str(0))
                 fp.close()
-                deamon.setSession(self)
+                daemon.setSession(self)
                 
             except Exception as e:
                 print("gaDisc.resetEnv failed with error as : {}".format(e))
@@ -279,12 +271,12 @@ class Session:
         
         As the name of the function says, this function deletes all of
         the meta data generated by this session and effectively deletes
-        this session uses the deamon data GA_UTIL_DIR
+        this session uses the daemon data GA_UTIL_DIR
         """
 
         if(self.mode == 'SAFE'):
             try:
-                sessDir = deamon.GA_UTIL_DIR + "/utilFiles/tmp" + str(self.sessID)
+                sessDir = daemon.GA_UTIL_DIR + "/utilFiles/tmp" + str(self.sessID)
                 shutil.rmtree(sessDir)
                 del self
             
