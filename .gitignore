@@ -9,3 +9,6 @@ ga2.egg-info/*
 
 # Ignore all temporary files
 *.smtf
+
+# Ignore the versions file
+Versions.org
