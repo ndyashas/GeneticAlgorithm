@@ -159,7 +159,7 @@ class Session:
             for agentID in currGen:
                 totalFitness += deamon.getAgent(self, agentID).fitness
 
-        except Exception:
+        except Exception as e:
             print("gaDisc.getAverageFitness failed with error as : {}".format(e))
             totalFitness = 0
 
