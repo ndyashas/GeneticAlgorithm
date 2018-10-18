@@ -37,3 +37,4 @@ class AgentDna:
                                spread=sess.spread,
                                valType=sess.valType)
         self.fitness = 0
+        self.nn = []

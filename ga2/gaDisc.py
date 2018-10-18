@@ -229,14 +229,21 @@ class Session:
             print("gaDisc.createNextGen failed with error as : {}".format(e))
 
             
-    def nn(self):
+    def nn(self, ipVector, opVectorSize, Dlayers, agentObj):
         """
-        INPUT       : Yet to decide
-        OUTPUT      : Yet to decide
+        INPUT       : ipVectors, opVectorSize, Dlayers, agentObj
+        OUTPUT      : a list of length opVectorSize
 
-        DESCRIPTION : Yet to decide
+        DESCRIPTION : This function takes in the input vector 'ipVector',
+                      output vector's size 'opVectorSize', Number of Densely
+                      connected layers 'Dlayers' and the agentObj itself.
         """
-        pass
+
+        try:
+            pass
+
+        except Exception as e:
+            print("gaDisc.nn failed with error as : {}".format(e))
         
             
     def resetEnv(self):
