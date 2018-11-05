@@ -228,24 +228,7 @@ class Session:
         except Exception as e:
             print("gaDisc.createNextGen failed with error as : {}".format(e))
 
-            
-    def nn(self, ipVector, opVectorSize, Dlayers, agentObj):
-        """
-        INPUT       : ipVectors, opVectorSize, Dlayers, agentObj
-        OUTPUT      : a list of length opVectorSize
-
-        DESCRIPTION : This function takes in the input vector 'ipVector',
-                      output vector's size 'opVectorSize', Number of Densely
-                      connected layers 'Dlayers' and the agentObj itself.
-        """
-
-        try:
-            pass
-
-        except Exception as e:
-            print("gaDisc.nn failed with error as : {}".format(e))
-        
-            
+                        
     def resetEnv(self):
         """
         INPUT       : None
