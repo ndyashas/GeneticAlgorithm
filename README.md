@@ -14,7 +14,7 @@ pip3 install ga2
 
 * upgrading
 ```
-pip3 install --upgrade --no-cache ga2==0.2.9
+pip3 install --upgrade --no-cache ga2==1.0.0.post1
 ```
 
 * import the Genetic Algorithm utility as 

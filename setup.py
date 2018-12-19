@@ -5,12 +5,12 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="ga2",
-    version="1.0.0.b1",
+    version="1.0.0.post1",
     author="Yashas ND",
     author_email="yashasbharadwaj111@gmail.com",
     description="A simple robust Genetic Algorithm utility",
     long_description=long_description,
-    long_description_content_type='text/markdown',
+    long_description_content_type="text/markdown",
     url="https://github.com/yashasbharadwaj111/GeneticAlgorithm",
     packages=setuptools.find_packages(),
     classifiers=[
