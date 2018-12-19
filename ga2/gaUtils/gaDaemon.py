@@ -9,6 +9,7 @@ import random
 import pickle
 
 import ga2
+import numpy as np
 import ga2.gaUtils.AgentClass as AgentClass
 GA_UTIL_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -304,8 +305,9 @@ def unlock(sess):
 
 def getCurrGen(sess):
     """
-    INPUT       : sessID
-    OUTPUT      : Agent object
+    INPUT       : session object
+    OUTPUT      : A set containing the agentIDs of all the agents
+                  in the current generation
 
     DESCRIPTION : Creates and stores the newly created AgentDna
                   object in that particular session's directory
@@ -327,7 +329,7 @@ def getCurrGen(sess):
 
 def setCurrGen(sess, agentList):
     """
-    INPUT       : None
+    INPUT       : session object, updated agent set
     OUTPUT      : Agent object
 
     DESCRIPTION : Creates and stores the newly created AgentDna
@@ -350,16 +352,15 @@ def setCurrGen(sess, agentList):
 
 def storeAgent(sess, agentObj):
     """
-    INPUT       : None
-    OUTPUT      : Agent object
+    INPUT       : session object
+    OUTPUT      : Updated agent Onject
 
-    DESCRIPTION : Creates and stores the newly created AgentDna
-                  object in that particular session's directory
+    DESCRIPTION : Updates the agent object in that session
     """
     
     currAgents = getCurrGen(sess)
     lock(sess)
-    if(1):
+    try:
         if(sess.mode == 'SAFE'):
             tpfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(agentObj.sessID)+"/dnaPool/dna"
                         +str(agentObj.agentID)+".dna", "wb")
@@ -369,11 +370,11 @@ def storeAgent(sess, agentObj):
         else:
             sess.agentBasket[agentObj.agentID] = agentObj
             currAgents.add(agentObj.agentID)
-    '''
+
     except Exception:
         print("error in store agent, couldnt wb")
         return(0)
-    '''
+    
     setCurrGen( sess, currAgents)
     unlock(sess)
     return(agentObj.agentID)
@@ -381,14 +382,14 @@ def storeAgent(sess, agentObj):
 
 def getAgent(sess, agentID):
     """
-    INPUT       : None
+    INPUT       : Session object, agentID
     OUTPUT      : Agent object
 
-    DESCRIPTION : Creates and stores the newly created AgentDna
-                  object in that particular session's directory
+    DESCRIPTION : returns the agent in the current session
+                  with its ID = agentID
     """
 
-    if(1):
+    try:
         if(sess.mode == 'SAFE'):
             tpfp = open(GA_UTIL_DIR+"/utilFiles/tmp"+str(sess.sessID)+"/dnaPool/dna"
                         +str(agentID)+".dna", "rb")
@@ -396,21 +397,18 @@ def getAgent(sess, agentID):
             tpfp.close()
         else:
             agentObj = sess.agentBasket[agentID]
-    '''        
+            
     except Exception:
         print("Error couldnt retrieve error in getAgent()")
         agentObj = None
-    '''
+    
     return(agentObj)
 
 
 def generateAgentID(sess):
     """
-    INPUT       : None
-    OUTPUT      : Agent object
-
-    DESCRIPTION : Creates and stores the newly created AgentDna
-                  object in that particular session's directory
+    INPUT       : Session object
+    OUTPUT      : Returns a new unique agent ID
     """
     if(sess.mode == 'SAFE'):
         try:
@@ -441,7 +439,7 @@ def generateAgentID(sess):
 
 def createAgent(sess):
     """
-    INPUT       : None
+    INPUT       : Session object
     OUTPUT      : Agent object
 
     DESCRIPTION : Creates and stores the newly created AgentDna
@@ -455,17 +453,17 @@ def createAgent(sess):
     storeAgent(sess, agent)
     return(agent)
 
+
 def deleteAgent(sess, agentID):
     """
-    INPUT       : sessID, agentID
+    INPUT       : session object, agentID
     OUTPUT      : None
 
-    DESCRIPTION : Creates and stores the newly created AgentDna
-                  object in that particular session's directory
+    DESCRIPTION : removes the agent from the session
     """
     
     lock(sess)
-    if(1):
+    try:
         currGen = getCurrGen(sess)
         if(agentID in currGen):
             if(sess.mode == 'SAFE'):
@@ -481,13 +479,12 @@ def deleteAgent(sess, agentID):
                 setCurrGen(sess, currGen)
         else:
             print("Trying to delete an agent not present in the session")
-    '''
+    
     except Exception:
         print("delete Agent encountered an error")
         return(0)
     
     finally:
         unlock(sess.sessID)
-    '''
-    unlock(sess)
+    
     return(1)
