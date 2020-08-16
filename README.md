@@ -1,3 +1,5 @@
+> This project has been discontinued.
+
 # Genetic Algorithm Utility for python
 
 ### What is Genetic Algorithm ?
